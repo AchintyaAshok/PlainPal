@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <title>PlainPal ;)</title>
+    <!-- React Scripts -->
+    <script src='https://fb.me/react-with-addons-0.14.6.js'></script>
+    <script src='https://fb.me/JSXTransformer-0.13.3.js'></script>
+    <!-- Fusion Charts -->
+    <script src='js/fusion/fusioncharts.js'></script>
+    <script src='js/fusion/fusioncharts.charts.js'></script>
+    <script src='js/fusion/fusioncharts.powercharts.js'></script>
+    <script src='js/fusion/react-fusioncharts.min.js'></script>
+    <script src='js/fusion/themes/fusioncharts.theme.carbon.js'></script>
+    <!-- My CSS -->
+    <link href="css/custom/main.css" rel="stylesheet" type="text/css"></script>
+    <!-- Materialize UI -->
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+  <body>
+    <!-- <nav>
+    <div class="nav-wrapper cyan accent-2">
+      <a href="#" class="brand-logo center indigo-text text-darken-4">PlainPal</a>
+      <ul id="nav-mobile" class="left hide-on-med-and-down">
+        <li class="active"><a class="indigo-text text-darken-4">My Trips</a></li>
+        <li><a class="indigo-text text-darken-4">New Trip</a></li>
+        <li><a class="indigo-text text-darken-4">Feeling Lucky</a></li>
+      </ul>
+    </div>
+  </nav> -->
+
+    <div class='row'>
+      <ul id="slide-out" class="side-nav fixed">
+        <li><a href="#!">My Trips</a></li>
+        <div class='collection'>
+          <a class='collection-item'>Athens</a>
+          <a class='collection-item'>Malta</a>
+          <a class='collection-item'>Istanbul</a>
+          <a class='collection-item'>Oslo</a>
+        </div>
+        <li><a href="#!">Second Sidebar Link</a></li>
+      </ul>
+    <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+      <!-- <div id='side-panel' class='col s3'>
+        <div class='collection'>
+          <a class='collection-item'>Athens</a>
+          <a class='collection-item'>Malta</a>
+          <a class='collection-item'>Istanbul</a>
+          <a class='collection-item'>Oslo</a>
+        </div> -->
+      </div>
+      <div id='main-dashboard' class='col s9'>
+        <div id="dashboard"></div>
+      </div>
+    </div>
+    <!-- Additional Scripts -->
+    <script src="components/dashboard.jsx" type="text/jsx"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+  </body>
+</html>

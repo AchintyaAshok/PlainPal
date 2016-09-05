@@ -1,0 +1,25 @@
+{
+  "name": "plainpal",
+  "version": "1.0.0",
+  "description": "Webapp that allows you to find flights for your vacations with variable criteria",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AchintyaAshok/PlainPal.git"
+  },
+  "keywords": [
+    "Planes",
+    "Flights",
+    "Tracker",
+    "Vacation"
+  ],
+  "author": "Achintya Ashok",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AchintyaAshok/PlainPal/issues"
+  },
+  "homepage": "https://github.com/AchintyaAshok/PlainPal#readme"
+}
