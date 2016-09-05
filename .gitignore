@@ -3,3 +3,6 @@
 
 # Ignore npm modules downloaded locally
 */node_modules
+
+# Ignore tern proj files (for atom)
+*/.tern-project
