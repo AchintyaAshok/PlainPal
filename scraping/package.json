@@ -1,0 +1,25 @@
+{
+  "name": "travelscrapers",
+  "version": "1.0.0",
+  "description": "A collection of scraping libraries that will enable me to scrape data from Kayak, Orbitz, etc.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AchintyaAshok/PlainPal.git"
+  },
+  "keywords": [
+    "Travel",
+    "Scraping",
+    "Webscrapers",
+    "API"
+  ],
+  "author": "Achintya Ashok",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AchintyaAshok/PlainPal/issues"
+  },
+  "homepage": "https://github.com/AchintyaAshok/PlainPal#readme"
+}

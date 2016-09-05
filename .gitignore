@@ -2,4 +2,4 @@
 .DS_Store
 
 # Ignore npm modules downloaded locally
-plainPalApp/node_modules
+*/node_modules
