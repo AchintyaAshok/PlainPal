@@ -1,2 +1,5 @@
 # Ignore whatever the hell this is
 .DS_Store
+
+# Ignore npm modules downloaded locally
+plainPalApp/node_modules
