@@ -1,10 +1,12 @@
 var cheerio = require("cheerio");
 var request = require("request");
 var fs      = require("fs");
+var path    = require('path');
 
 const HTTP_STATUS_OK = 200;
 const MOCK_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36";
-const KAYAK_URL = "https://www.kayak.com/flights/";
+const KAYAK_URL = "https://www.kayak.com";
+const DATA_DIR = "data";
 // execute the request, get some stuff from Kayak
 
 /* Formats the given date in the following format: YYYY-MM-DD */
@@ -37,7 +39,7 @@ function getFlightTimeDetails(timeBox){
       time: depTime,
       location: {
         shortName: depLocShortName,
-        longNAme: depLocLongName
+        longName: depLocLongName
       }
     },
     arrival: {
@@ -59,7 +61,7 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
   var formattedEndDate = getFormattedDate(endDate);
   console.info("Dates: " + formattedEndDate + " to " + formattedEndDate);
 
-  var requestUrl =  KAYAK_URL + sourceCity + "-" + destCity + "/" + formattedStartDate + "/" + formattedEndDate;
+  var requestUrl =  KAYAK_URL + "/flights/" + sourceCity + "-" + destCity + "/" + formattedStartDate + "/" + formattedEndDate;
   console.info("Requesting url... " + requestUrl);
   // Execute the request
   request(
@@ -71,13 +73,23 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
       }
     }, function (error, response, html) {
       if (!error && response.statusCode == HTTP_STATUS_OK) {
-        // fs.writeFile("/Users/achintyaashok/Desktop/output.html", html, function(fsErr){
-        //   if(fsErr){
-        //     throw fsErr;
-        //   }
-        // });
         var $ = cheerio.load(html);
         console.log("Number of results: ", $("div.flightresult").length);
+        // All our flight details
+        var allFlightDetails = {
+          sourceCity: sourceCity,
+          destCity:   destCity,
+          timeInterval: {
+            startDate:          startDate.getTime(), // get the millisecond value for easy conversion
+            formattedStartDate: formattedStartDate,
+            endDate:            endDate.getTime(),
+            formattedEndDate:   formattedEndDate
+          },
+          queryUrl: requestUrl
+        };
+
+        // All the flights
+        var flights = [];
         $("div.flightresult").each(function(i, element){
           var flightIndex = $(this).attr("data-index");
           var detailsBoxId = "#infolink" + String(flightIndex);
@@ -102,15 +114,28 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
           // Return Leg
           var retLeg = departLeg.next();
           var returnLegDetails = getFlightTimeDetails(retLeg);
-          var allFlightDetails = {
-            departLeg: departLegDetails,
-            returnLeg: returnLegDetails
+          var flightDetails = {
+            price:      price,
+            departLeg:  departLegDetails,
+            returnLeg:  returnLegDetails,
+            link:       KAYAK_URL + offerLink
           };
-          console.log("Flight Details: ", allFlightDetails);
+          flights.push(flightDetails);
+        });
+        allFlightDetails.flights = flights;
+
+        // Write our data
+        var dataFileName = sourceCity + "-" + destCity + "-" + formattedStartDate + "-" + formattedEndDate + ".json";
+        var filePath = path.join(__dirname, DATA_DIR, dataFileName);
+        fs.writeFile(filePath, JSON.stringify(allFlightDetails), function(fsError){
+          if(fsError){
+            throw fsError;
+          }
         });
       }
   });
 }
 
-getTripDetails("JFK", "ATH", new Date(2016, 8, 10), new Date(2016, 8, 18));
-// getTripDetails("JFK", "ATH", new Date(2016, 8, 18), new Date(2016, 8, 26));
+// getTripDetails("JFK", "ATH", new Date(2016, 8, 10), new Date(2016, 8, 18));
+// getTripDetails("JFK", "SFO", new Date(2016, 8, 18), new Date(2016, 8, 26));
+getTripDetails("JFK", "FAT", new Date(2016, 9, 1), new Date(2016, 9, 9));
