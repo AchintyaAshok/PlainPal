@@ -47,13 +47,31 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
         console.log("Number of results: ", $("div.flightresult").length);
         $("div.flightresult").each(function(i, element){
           var flightIndex = $(this).attr("data-index");
-          var priceBoxId = "#infolink" + String(flightIndex);
-          var priceBox = $(priceBoxId);
-          var price = priceBox.children("div.maindatacell")
+          var detailsBoxId = "#infolink" + String(flightIndex);
+          var detailsBox = $(detailsBoxId);
+
+          // Get the pricing information
+          var priceTag = detailsBox.children("div.maindatacell")
             .children("div.mainInfoDiv")
             .children("div.pricerange")
-            .children("a.bookitprice").text();
-          console.log(price);
+            .children("a.bookitprice");
+          var price = priceTag.text();
+          var offerLink = priceTag.attr("href");
+
+          // Get Airline information
+          var airlineInfo = detailsBox.children("div.tripdetailholder")
+            .children("div.airlineAndLegs")
+            .children("div.legholder");
+          var toLeg = airlineInfo.first(); // get the to leg
+          var toLegDepTime = toLeg.children("div.flightTimeDeparture").text();
+          var toLegDepLocationShort = toLegDepartureTime.next().text();
+          var toLegDepLocationLong = toLegDepartureTime.next().attr("title");
+          var toLegArrivalTime = toLeg.children("div.flightTimeArrival");
+          // Return leg details
+          var returnLeg = toLeg.next();
+          var returnLegDepartureTime
+
+          // console.log(price);
         });
       }
   });
