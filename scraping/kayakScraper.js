@@ -7,14 +7,12 @@ const HTTP_STATUS_OK = 200;
 const MOCK_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36";
 const KAYAK_URL = "https://www.kayak.com";
 const DATA_DIR = "data";
-// execute the request, get some stuff from Kayak
 
 /* Formats the given date in the following format: YYYY-MM-DD */
 function getFormattedDate(d){
   var startDay = d.getDate();
   if(startDay < 10) startDay = "0" + startDay;
-  var startMonth = d.getMonth();
-  startMonth += 1;
+  var startMonth = d.getMonth() + 1; // months are 0-indexed in javascript.. god knows why
   if(startMonth < 10) startMonth = "0" + startMonth;
   return(d.getFullYear() + "-" + startMonth + "-" + startDay);
 }
@@ -24,15 +22,15 @@ arrival time, arrival gate */
 function getFlightTimeDetails(timeBox){
   // Departure Details
   var depTimeElem = timeBox.children("div.flightTimeDeparture");
-  var depTime = depTimeElem.text();
+  var depTime = depTimeElem.text().replace(/[\n]/g, "");
   var depLocElem = depTimeElem.next();
-  var depLocShortName = depLocElem.text();
+  var depLocShortName = depLocElem.text().replace(/[ \n]/g, "");
   var depLocLongName = depLocElem.attr("title");
   // Arrival Details
   var arvTimeElem = timeBox.children("div.flightTimeArrival");
-  var arvTime = arvTimeElem.text();
+  var arvTime = arvTimeElem.text().replace(/[\n]/g, "");
   var arvLocElem = arvTimeElem.next();
-  var arvLocShortName = arvLocElem.text();
+  var arvLocShortName = arvLocElem.text().replace(/[ \n]/g, "");
   var arvLocLongName = arvLocElem.attr("title");
   return({
     departure: {
@@ -120,6 +118,12 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
             returnLeg:  returnLegDetails,
             link:       KAYAK_URL + offerLink
           };
+
+          if(isNaN(parseFloat(price.substr(1)))){
+            console.log("This price is not a number..", price);
+            return; // jquery each loop uses this rather than continue
+          }
+          console.info("Price -> ", price);
           flights.push(flightDetails);
         });
         allFlightDetails.flights = flights;

@@ -1,5 +1,5 @@
 # Ignore whatever the hell this is
-.DS_Store
+*.DS_Store
 
 # Ignore npm modules downloaded locally
 */node_modules
