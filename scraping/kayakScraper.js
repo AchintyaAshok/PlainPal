@@ -17,6 +17,39 @@ function getFormattedDate(d){
   return(d.getFullYear() + "-" + startMonth + "-" + startDay);
 }
 
+/* Returns the details for departure time, departure date,
+arrival time, arrival gate */
+function getFlightTimeDetails(timeBox){
+  // Departure Details
+  var depTimeElem = timeBox.children("div.flightTimeDeparture");
+  var depTime = depTimeElem.text();
+  var depLocElem = depTimeElem.next();
+  var depLocShortName = depLocElem.text();
+  var depLocLongName = depLocElem.attr("title");
+  // Arrival Details
+  var arvTimeElem = timeBox.children("div.flightTimeArrival");
+  var arvTime = arvTimeElem.text();
+  var arvLocElem = arvTimeElem.next();
+  var arvLocShortName = arvLocElem.text();
+  var arvLocLongName = arvLocElem.attr("title");
+  return({
+    departure: {
+      time: depTime,
+      location: {
+        shortName: depLocShortName,
+        longNAme: depLocLongName
+      }
+    },
+    arrival: {
+      time: arvTime,
+      location: {
+        shortName: arvLocShortName,
+        longName: arvLocLongName
+      }
+    }
+  });
+}
+
 /* This function stores trip details for the information provided. It will retreive trip
 details from Kayak and store it in a local JSON file. */
 function getTripDetails(sourceCity, destCity, startDate, endDate){
@@ -61,27 +94,23 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
           // Get Airline information
           var airlineInfo = detailsBox.children("div.tripdetailholder")
             .children("div.airlineAndLegs")
-            .children("div.legholder");
-          var toLeg = airlineInfo.first(); // get the to leg
-          var toLegDepTime = toLeg.children("div.flightTimeDeparture").text();
-          var toLegDepLocationShort = toLegDepartureTime.next().text();
-          var toLegDepLocationLong = toLegDepartureTime.next().attr("title");
-          var toLegArrivalTime = toLeg.children("div.flightTimeArrival");
-          // Return leg details
-          var returnLeg = toLeg.next();
-          var returnLegDepartureTime
-
-          // console.log(price);
+            .children("div.legholder")
+            .children();
+          // Departure Leg
+          var departLeg = airlineInfo.first(); // get the to leg
+          var departLegDetails = getFlightTimeDetails(departLeg);
+          // Return Leg
+          var retLeg = departLeg.next();
+          var returnLegDetails = getFlightTimeDetails(retLeg);
+          var allFlightDetails = {
+            departLeg: departLegDetails,
+            returnLeg: returnLegDetails
+          };
+          console.log("Flight Details: ", allFlightDetails);
         });
       }
   });
 }
 
 getTripDetails("JFK", "ATH", new Date(2016, 8, 10), new Date(2016, 8, 18));
-getTripDetails("JFK", "ATH", new Date(2016, 8, 18), new Date(2016, 8, 26));
-// // what's our vacation date range?
-// var dateStart = "2016-09-10";
-// var dateEnd = "2016-09-17";
-//
-// var fromAirport = "JFK";
-// var toAirport = "ATH";
+// getTripDetails("JFK", "ATH", new Date(2016, 8, 18), new Date(2016, 8, 26));
