@@ -1,5 +1,4 @@
 var kayak = require("../kayakScraper");
-console.log("KAYAK", kayak);
 
 describe("Test Kayak Scraper", function(){
   describe("Get Formatted Date with double-digit day", function(){

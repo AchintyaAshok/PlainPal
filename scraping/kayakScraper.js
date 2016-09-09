@@ -41,10 +41,8 @@ function getFlightTimeDetails(timeBox){
   });
 }
 
-var exports = module.exports = {};
-
 /* Formats the given date in the following format: YYYY-MM-DD */
-exports.getFormattedDate = function(d){
+function getFormattedDate(d){
   var startDay = d.getDate();
   if(startDay < 10) startDay = "0" + startDay;
   var startMonth = d.getMonth() + 1; // months are 0-indexed in javascript.. god knows why
@@ -54,7 +52,7 @@ exports.getFormattedDate = function(d){
 
 /* This function stores trip details for the information provided. It will retreive trip
 details from Kayak and store it in a local JSON file. */
-exports.getTripDetails = function(sourceCity, destCity, startDate, endDate){
+function getTripDetails(sourceCity, destCity, startDate, endDate){
   console.info("Retreiving trip details:\n" + sourceCity + " - " + destCity);
   // Format the date string
   var formattedStartDate = exports.getFormattedDate(startDate);
@@ -145,20 +143,11 @@ exports.getTripDetails = function(sourceCity, destCity, startDate, endDate){
   });
 }
 
-// return {
-//   getFormattedDate: function(d){
-//     getFormattedDate(d);
-//   },
-//   getTripDetails: function(s, d, st, ed){
-//     getTripDetails(s, d, st, ed);
-//   },
-//   getFlightTimeDetails: function(t){
-//     return getFlightTimeDetails(t);
-//   }
-// };
+var exports = module.exports = {
+  getFormattedDate: getFormattedDate,
+  getTripDetails: getTripDetails
+};
 
-// console.log("Exports", exports);
-// return exports;
 
 // console.log("Loaded kayakScraper.js");
 // getTripDetails("JFK", "ATH", new Date(2016, 8, 10), new Date(2016, 8, 18));
