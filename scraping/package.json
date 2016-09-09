@@ -4,7 +4,7 @@
   "description": "A collection of scraping libraries that will enable me to scrape data from Kayak, Orbitz, etc.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/jasmine-node spec"
   },
   "repository": {
     "type": "git",
@@ -17,9 +17,16 @@
     "API"
   ],
   "author": "Achintya Ashok",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/AchintyaAshok/PlainPal/issues"
   },
-  "homepage": "https://github.com/AchintyaAshok/PlainPal#readme"
+  "homepage": "https://github.com/AchintyaAshok/PlainPal#readme",
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "express": "^4.14.0",
+    "jasmine-node": "^1.14.5",
+    "mongo": "^0.1.0",
+    "request": "^2.74.0"
+  }
 }

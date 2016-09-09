@@ -8,15 +8,6 @@ const MOCK_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWe
 const KAYAK_URL = "https://www.kayak.com";
 const DATA_DIR = "data";
 
-/* Formats the given date in the following format: YYYY-MM-DD */
-function getFormattedDate(d){
-  var startDay = d.getDate();
-  if(startDay < 10) startDay = "0" + startDay;
-  var startMonth = d.getMonth() + 1; // months are 0-indexed in javascript.. god knows why
-  if(startMonth < 10) startMonth = "0" + startMonth;
-  return(d.getFullYear() + "-" + startMonth + "-" + startDay);
-}
-
 /* Returns the details for departure time, departure date,
 arrival time, arrival gate */
 function getFlightTimeDetails(timeBox){
@@ -50,14 +41,25 @@ function getFlightTimeDetails(timeBox){
   });
 }
 
+var exports = module.exports = {};
+
+/* Formats the given date in the following format: YYYY-MM-DD */
+exports.getFormattedDate = function(d){
+  var startDay = d.getDate();
+  if(startDay < 10) startDay = "0" + startDay;
+  var startMonth = d.getMonth() + 1; // months are 0-indexed in javascript.. god knows why
+  if(startMonth < 10) startMonth = "0" + startMonth;
+  return(d.getFullYear() + "-" + startMonth + "-" + startDay);
+}
+
 /* This function stores trip details for the information provided. It will retreive trip
 details from Kayak and store it in a local JSON file. */
-function getTripDetails(sourceCity, destCity, startDate, endDate){
+exports.getTripDetails = function(sourceCity, destCity, startDate, endDate){
   console.info("Retreiving trip details:\n" + sourceCity + " - " + destCity);
   // Format the date string
-  var formattedStartDate = getFormattedDate(startDate);
-  var formattedEndDate = getFormattedDate(endDate);
-  console.info("Dates: " + formattedEndDate + " to " + formattedEndDate);
+  var formattedStartDate = exports.getFormattedDate(startDate);
+  var formattedEndDate = exports.getFormattedDate(endDate);
+  console.info("Dates: " + formattedStartDate + " to " + formattedEndDate);
 
   var requestUrl =  KAYAK_URL + "/flights/" + sourceCity + "-" + destCity + "/" + formattedStartDate + "/" + formattedEndDate;
   console.info("Requesting url... " + requestUrl);
@@ -123,6 +125,9 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
             console.log("This price is not a number..", price);
             return; // jquery each loop uses this rather than continue
           }
+          else{
+            price = parseFloat(price.substr(1)); // convert the price to an integer value
+          }
           console.info("Price -> ", price);
           flights.push(flightDetails);
         });
@@ -140,6 +145,23 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
   });
 }
 
+// return {
+//   getFormattedDate: function(d){
+//     getFormattedDate(d);
+//   },
+//   getTripDetails: function(s, d, st, ed){
+//     getTripDetails(s, d, st, ed);
+//   },
+//   getFlightTimeDetails: function(t){
+//     return getFlightTimeDetails(t);
+//   }
+// };
+
+// console.log("Exports", exports);
+// return exports;
+
+// console.log("Loaded kayakScraper.js");
 // getTripDetails("JFK", "ATH", new Date(2016, 8, 10), new Date(2016, 8, 18));
 // getTripDetails("JFK", "SFO", new Date(2016, 8, 18), new Date(2016, 8, 26));
-getTripDetails("JFK", "FAT", new Date(2016, 9, 1), new Date(2016, 9, 9));
+// getTripDetails("SFO", "FAT", new Date(2016, 8, 18), new Date(2016, 8, 26));
+// getTripDetails("JFK", "FAT", new Date(2016, 9, 18), new Date(2016, 9, 26));
