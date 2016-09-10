@@ -151,6 +151,6 @@ var exports = module.exports = {
 
 // console.log("Loaded kayakScraper.js");
 // getTripDetails("JFK", "ATH", new Date(2016, 8, 10), new Date(2016, 8, 18));
-getTripDetails("JFK", "SFO", new Date(2016, 10, 18), new Date(2016, 10, 26));
+// getTripDetails("JFK", "SFO", new Date(2016, 10, 18), new Date(2016, 10, 26));
 // getTripDetails("SFO", "FAT", new Date(2016, 8, 18), new Date(2016, 8, 26));
 // getTripDetails("JFK", "FAT", new Date(2016, 9, 18), new Date(2016, 9, 26));

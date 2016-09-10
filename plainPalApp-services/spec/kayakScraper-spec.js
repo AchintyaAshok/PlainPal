@@ -1,4 +1,4 @@
-var kayak = require("../kayakScraper");
+var kayak = require("../lib/scrapers/kayakScraper");
 
 describe("Test Kayak Scraper", function(){
   describe("Test getFormattedDate()", function(){
