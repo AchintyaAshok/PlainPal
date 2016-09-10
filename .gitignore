@@ -9,3 +9,6 @@
 
 # Ignore mongo files
 */plainPalApp-services/mongo_data/*
+
+# Ignore NPM Debug
+*npm_debug.log
