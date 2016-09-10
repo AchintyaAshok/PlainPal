@@ -6,3 +6,6 @@
 
 # Ignore tern proj files (for atom)
 *.tern-project
+
+# Ignore mongo files
+*/plainPalApp-services/mongo_data/*
