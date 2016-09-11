@@ -21,15 +21,14 @@ app.use(bodyParser.json());
 
 // ROUTES FOR OUR API
 // =============================================================================
-var router = express.Router();              // get an instance of the express Router
+var router = express.Router(); // get an instance of the express Router
 
 // SET THE ROUTES
-// ==============
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(request, response) {
-  response.json({ message: 'hooray! welcome to our api!' });
+  response.json({ message: 'hooray! welcome to Plain Pal API!!' });
 });
 
+/* This allows you to get all the trips */
 router.get("/trips", function(request, response){
   var directoryPath = path.join(__dirname, DATA_DIR);
   console.log("Getting files from directory: ", directoryPath);
@@ -47,8 +46,8 @@ router.get("/trips", function(request, response){
     fileData.push(content);
   })
   .then(function(){
-    console.log("All Data: ", fileData);
-    console.log("\n\n\nNum Items: ", fileData.length);
+    // console.log("All Data: ", fileData);
+    console.log("\n\n\nNum Trips: ", fileData.length);
     response.json( { flightData: fileData } );
   })
   .catch(function(error){
@@ -56,6 +55,7 @@ router.get("/trips", function(request, response){
   });
 });
 
+/* Create a new trip */
 router.post('/trips', function(request, response){
   console.log("trips payload: ", request.body);
   var source = request.body.source;
@@ -71,10 +71,7 @@ router.post('/trips', function(request, response){
   });
 });
 
-// more routes for our API will happen here
-
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
+// Register the base root for the API
 app.use('/api', router);
 
 // START THE SERVER

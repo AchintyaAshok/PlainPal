@@ -88,8 +88,11 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
             endDate:            endDate.getTime(),
             formattedEndDate:   formattedEndDate
           },
-          queryUrl: requestUrl
+          queryUrl: requestUrl,
+          bestOffer: {}
         };
+
+        var lowestPrice = Number.MAX_VALUE;
 
         // All the flights
         var flights = [];
@@ -104,6 +107,12 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
             .children("div.pricerange")
             .children("a.bookitprice");
           var price = priceTag.text();
+          price = parseFloat(price.substr(1));
+          if(isNaN(price)){
+            console.log("This price is not a number..", price);
+            return; // jquery each loop uses this rather than continue
+          }
+          console.info("Price -> ", price);
           var offerLink = priceTag.attr("href");
 
           // Get Airline information
@@ -123,20 +132,16 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
             returnLeg:  returnLegDetails,
             link:       KAYAK_URL + offerLink
           };
-
-          if(isNaN(parseFloat(price.substr(1)))){
-            console.log("This price is not a number..", price);
-            return; // jquery each loop uses this rather than continue
+          if(price < lowestPrice){
+            console.log("New Best Offer! ", price);
+            lowestPrice = price;
+            allFlightDetails.bestOffer = flightDetails;
           }
-          else{
-            price = parseFloat(price.substr(1)); // convert the price to an integer value
-          }
-          console.info("Price -> ", price);
           flights.push(flightDetails);
         });
         allFlightDetails.flights = flights;
 
-        console.log("Before write file");
+        // console.log("Before write file", allFlightDetails.map(function()));
         resolve(allFlightDetails);
       }
     );
@@ -158,7 +163,7 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
 
 var exports = module.exports = {
   getFormattedDate: getFormattedDate,
-  getTripDetails: getTripDetails
+  getTripDetails:   getTripDetails
 };
 
 
