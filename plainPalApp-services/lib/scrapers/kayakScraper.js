@@ -141,19 +141,16 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
         });
         allFlightDetails.flights = flights;
 
-        // console.log("Before write file", allFlightDetails.map(function()));
         resolve(allFlightDetails);
       }
     );
   })
   .then(function(allFlightDetails){
-    console.log("In write file");
     // Write our data
     var dataFileName = sourceCity + "-" + destCity + "-" + formattedStartDate + "-" + formattedEndDate + ".json";
     var filePath = path.join(__dirname, DATA_DIR, dataFileName);
     return fs.writeFileAsync(filePath, JSON.stringify(allFlightDetails), 'utf-8', function(fsError){
       if(fsError){
-        // throw fsError;
         reject(fsError);
       }
       resolve();

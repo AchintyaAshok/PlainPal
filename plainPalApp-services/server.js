@@ -58,7 +58,6 @@ router.post('/trips', function(request, response){
   var destination = request.body.destination;
   kayak.getTripDetails(source, destination, new Date(2016, 10, 11), new Date(2016, 10, 19))
   .then(function(){
-    console.log("got to response portion");
     response.sendStatus(200);
   })
   .catch(function(error){
