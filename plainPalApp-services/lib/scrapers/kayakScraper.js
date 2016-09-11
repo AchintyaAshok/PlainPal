@@ -1,12 +1,13 @@
 var cheerio = require("cheerio");
 var request = require("request");
-var fs      = require("fs");
+var Promise = require("bluebird");
+var fs      = Promise.promisifyAll(require("fs"));
 var path    = require('path');
 
 const HTTP_STATUS_OK = 200;
 const MOCK_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36";
 const KAYAK_URL = "https://www.kayak.com";
-const DATA_DIR = "data";
+const DATA_DIR = "../../data";
 
 /* Returns the details for departure time, departure date,
 arrival time, arrival gate */
@@ -61,16 +62,20 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
 
   var requestUrl =  KAYAK_URL + "/flights/" + sourceCity + "-" + destCity + "/" + formattedStartDate + "/" + formattedEndDate;
   console.info("Requesting url... " + requestUrl);
-  // Execute the request
-  request(
-    {
-      uri: requestUrl,
-      method: "GET",
-      headers: {
-        "user-agent": MOCK_USER_AGENT
-      }
-    }, function (error, response, html) {
-      if (!error && response.statusCode == HTTP_STATUS_OK) {
+
+  return new Promise(function(resolve, reject){
+    request(
+      {
+        uri: requestUrl,
+        method: "GET",
+        headers: {
+          "user-agent": MOCK_USER_AGENT
+        }
+      }, function (error, response, html) {
+        if(error || response.statusCode != HTTP_STATUS_OK){
+          reject(error);
+        }
+        // if (!error && response.statusCode == HTTP_STATUS_OK) {
         var $ = cheerio.load(html);
         console.log("Number of results: ", $("div.flightresult").length);
         // All our flight details
@@ -131,16 +136,103 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
         });
         allFlightDetails.flights = flights;
 
-        // Write our data
-        var dataFileName = sourceCity + "-" + destCity + "-" + formattedStartDate + "-" + formattedEndDate + ".json";
-        var filePath = path.join(__dirname, DATA_DIR, dataFileName);
-        fs.writeFile(filePath, JSON.stringify(allFlightDetails), function(fsError){
-          if(fsError){
-            throw fsError;
-          }
-        });
-      }
-  });
+        console.log("Before write file");
+        resolve(allFlightDetails);
+        // }
+      })
+    }).then(function(allFlightDetails){
+      console.log("In write file");
+      // Write our data
+      var dataFileName = sourceCity + "-" + destCity + "-" + formattedStartDate + "-" + formattedEndDate + ".json";
+      var filePath = path.join(__dirname, DATA_DIR, dataFileName);
+      return fs.writeFileAsync(filePath, JSON.stringify(allFlightDetails), 'utf-8', function(fsError){
+        if(fsError){
+          // throw fsError;
+          reject(fsError);
+        }
+        resolve();
+      });
+    });
+  // Execute the request
+  // request(
+  //   {
+  //     uri: requestUrl,
+  //     method: "GET",
+  //     headers: {
+  //       "user-agent": MOCK_USER_AGENT
+  //     }
+  //   }, function (error, response, html) {
+  //     if (!error && response.statusCode == HTTP_STATUS_OK) {
+  //       var $ = cheerio.load(html);
+  //       console.log("Number of results: ", $("div.flightresult").length);
+  //       // All our flight details
+  //       var allFlightDetails = {
+  //         sourceCity: sourceCity,
+  //         destCity:   destCity,
+  //         timeInterval: {
+  //           startDate:          startDate.getTime(), // get the millisecond value for easy conversion
+  //           formattedStartDate: formattedStartDate,
+  //           endDate:            endDate.getTime(),
+  //           formattedEndDate:   formattedEndDate
+  //         },
+  //         queryUrl: requestUrl
+  //       };
+  //
+  //       // All the flights
+  //       var flights = [];
+  //       $("div.flightresult").each(function(i, element){
+  //         var flightIndex = $(this).attr("data-index");
+  //         var detailsBoxId = "#infolink" + String(flightIndex);
+  //         var detailsBox = $(detailsBoxId);
+  //
+  //         // Get the pricing information
+  //         var priceTag = detailsBox.children("div.maindatacell")
+  //           .children("div.mainInfoDiv")
+  //           .children("div.pricerange")
+  //           .children("a.bookitprice");
+  //         var price = priceTag.text();
+  //         var offerLink = priceTag.attr("href");
+  //
+  //         // Get Airline information
+  //         var airlineInfo = detailsBox.children("div.tripdetailholder")
+  //           .children("div.airlineAndLegs")
+  //           .children("div.legholder")
+  //           .children();
+  //         // Departure Leg
+  //         var departLeg = airlineInfo.first(); // get the to leg
+  //         var departLegDetails = getFlightTimeDetails(departLeg);
+  //         // Return Leg
+  //         var retLeg = departLeg.next();
+  //         var returnLegDetails = getFlightTimeDetails(retLeg);
+  //         var flightDetails = {
+  //           price:      price,
+  //           departLeg:  departLegDetails,
+  //           returnLeg:  returnLegDetails,
+  //           link:       KAYAK_URL + offerLink
+  //         };
+  //
+  //         if(isNaN(parseFloat(price.substr(1)))){
+  //           console.log("This price is not a number..", price);
+  //           return; // jquery each loop uses this rather than continue
+  //         }
+  //         else{
+  //           price = parseFloat(price.substr(1)); // convert the price to an integer value
+  //         }
+  //         console.info("Price -> ", price);
+  //         flights.push(flightDetails);
+  //       });
+  //       allFlightDetails.flights = flights;
+  //
+  //       // Write our data
+  //       var dataFileName = sourceCity + "-" + destCity + "-" + formattedStartDate + "-" + formattedEndDate + ".json";
+  //       var filePath = path.join(__dirname, DATA_DIR, dataFileName);
+  //       fs.writeFile(filePath, JSON.stringify(allFlightDetails), function(fsError){
+  //         if(fsError){
+  //           throw fsError;
+  //         }
+  //       });
+  //     }
+  // });
 }
 
 var exports = module.exports = {
