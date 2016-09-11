@@ -37,20 +37,16 @@ router.get("/trips", function(request, response){
 
   fs.readdirAsync(directoryPath).map(function(filename){
     filename = path.join(directoryPath, filename);
-    console.log("reading file: ", filename);
-    return fs.readFileAsync(filename, 'utf-8');
-  })
-  .then(function(content){
-    if(content.length == 0) return;
-    var content = JSON.parse(content);
-    fileData.push(content);
+    return fs.readFileAsync(filename, 'utf-8').then(function(contents){
+      fileData.push(JSON.parse(contents));
+    });
   })
   .then(function(){
-    // console.log("All Data: ", fileData);
     console.log("\n\n\nNum Trips: ", fileData.length);
     response.json( { flightData: fileData } );
   })
   .catch(function(error){
+    console.log("ERROR: ", error);
     response.status(500).json({error: error});
   });
 });
