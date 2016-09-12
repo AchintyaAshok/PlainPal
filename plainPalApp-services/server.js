@@ -9,10 +9,19 @@ var path        = require("path");
 // my libraries
 const LIB_DIR     = "lib";
 const SCRAPER_DIR = path.join(__dirname, LIB_DIR, "scrapers");
-var kayak         = require(SCRAPER_DIR + "/kayakScraper");
+var kayak         = require(path.join(SCRAPER_DIR, "kayakScraper"));
+const PORT        = 3000;
+const DATA_DIR    = path.join(__dirname, "data");
 
-const PORT = 3000;
-const DATA_DIR = "data";
+/* Have us print out data about each endpoint hit by the client. */
+function printEndpoint(method, name, payload, params){
+  console.log("\n========== ========== ==========");
+  console.log(method + " " + name);
+  console.log("PAYLOAD: ", payload);
+  console.log("PARAMS: ", params);
+  console.log("========== ========== ==========");
+}
+
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -30,13 +39,12 @@ router.get('/', function(request, response) {
 
 /* This allows you to get all the trips */
 router.get("/trips", function(request, response){
-  var directoryPath = path.join(__dirname, DATA_DIR);
-  console.log("Getting files from directory: ", directoryPath);
+  printEndpoint("GET", "/trips", {}, {});
 
   var fileData = [];
 
-  fs.readdirAsync(directoryPath).map(function(filename){
-    filename = path.join(directoryPath, filename);
+  fs.readdirAsync(DATA_DIR).map(function(filename){ // once all of the mapped functions are done, move on
+    filename = path.join(DATA_DIR, filename);
     return fs.readFileAsync(filename, 'utf-8').then(function(contents){
       fileData.push(JSON.parse(contents));
     });
@@ -53,7 +61,9 @@ router.get("/trips", function(request, response){
 
 /* Create a new trip */
 router.post('/trips', function(request, response){
-  console.log("trips payload: ", request.body);
+  // console.log("trips payload: ", request.body);
+  printEndpoint("POST", "/trips", request.body, request.params);
+
   var source = request.body.source;
   var destination = request.body.destination;
   kayak.getTripDetails(source, destination, new Date(2016, 10, 11), new Date(2016, 10, 19))

@@ -9,6 +9,18 @@ const MOCK_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWe
 const KAYAK_URL = "https://www.kayak.com";
 const DATA_DIR = "../../data";
 
+// Temporary before we start using the Mongo Interface
+const AIRPORT_CODES = {
+  JFK: "New York City",
+  ATH: "Athens",
+  MLA: "Malta",
+  MIA: "Miami",
+  IAD: "Washington D.C.",
+};
+
+// To pretty-print the month names
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 /* Returns the details for departure time, departure date,
 arrival time, arrival gate */
 function getFlightTimeDetails(timeBox){
@@ -77,21 +89,36 @@ function getTripDetails(sourceCity, destCity, startDate, endDate){
           reject(error);
         }
         var $ = cheerio.load(html);
-        console.log("Number of results: ", $("div.flightresult").length);
+
+        // Check the number of results we have
+        var numResults = $("div.flightresult").length;
+        console.log("Number of results: ", numResults);
+        if(numResults == 0){
+          console.log("No results found...");
+          throw("Unable to find any results");
+        }
+
         // All our flight details
         var allFlightDetails = {
-          sourceCity: sourceCity,
-          destCity:   destCity,
+          sourceCity:     sourceCity,
+          sourceCityName: AIRPORT_CODES[sourceCity],
+          destCity:       destCity,
+          destCityName:   AIRPORT_CODES[destCity],
           timeInterval: {
             startDate:          startDate.getTime(), // get the millisecond value for easy conversion
             formattedStartDate: formattedStartDate,
+            startMonthName:     MONTH_NAMES[startDate.getMonth()],
             endDate:            endDate.getTime(),
-            formattedEndDate:   formattedEndDate
+            formattedEndDate:   formattedEndDate,
+            endMonthName:       MONTH_NAMES[endDate.getMonth()],
+            numDays:            endDate.getDate() - startDate.getDate(),
+
           },
           queryUrl: requestUrl,
           bestOffer: {}
         };
 
+        // Keep track of the lowest prices
         var lowestPrice = Number.MAX_VALUE;
 
         // All the flights
