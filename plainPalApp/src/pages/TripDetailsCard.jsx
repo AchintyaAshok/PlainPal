@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 export default class TripDetailsCard extends React.Component {
   render() {
     return (
-      <div className="col s12 m4">
+      <div className="col s12 m4 semi-transparent">
         <div className="card">
           <div className="card-image">
             <img src="img/acropolis.jpg"/>
