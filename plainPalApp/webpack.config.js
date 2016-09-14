@@ -7,7 +7,7 @@ module.exports = {
   ],
   devtool: 'eval-source-map',
   output: {
-    path: path.join(__dirname, "build/webpack-build/js"),
+    path: path.join(__dirname, "build"),
     filename: 'bundle.js',
   },
   module: {

@@ -14,4 +14,4 @@
 *npm_debug.log
 
 # Ignore Webpack Build
-/plainPalApp/build/webpack-build/* 
+/plainPalApp/build/bundle.js 
