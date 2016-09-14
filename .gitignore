@@ -12,3 +12,6 @@
 
 # Ignore NPM Debug
 *npm_debug.log
+
+# Ignore Webpack Build
+/plainPalApp/build/webpack-build/* 

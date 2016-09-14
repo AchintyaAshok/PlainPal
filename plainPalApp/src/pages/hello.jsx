@@ -3,7 +3,11 @@ import ReactDOM from 'react-dom'; // needed to mount React components
 
 class Hello extends React.Component {
   render() {
-    return <h1>Hello World!</h1>
+    return (
+      <div class='row'>
+        
+      </div>
+    )
   }
 }
 

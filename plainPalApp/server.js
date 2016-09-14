@@ -28,7 +28,6 @@ var router = express.Router();
 
 router.get("/", function(request, response){
   response.sendFile(path.join(__dirname, "build/index.html"));
-  // response.status(200).json({ message: "Welcome to PlainPal" });
 });
 
 app.use('/', router);
