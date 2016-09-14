@@ -3,15 +3,26 @@ var webpack = require("webpack"); // this is a module organizer
 
 module.exports = {
   entry: [
-    './src/app'
+    './src/index.js'
   ],
   devtool: 'eval-source-map',
   output: {
-    path: __dirname,
-    filename: 'app.js',
-    publicPath: '/js/'
+    path: path.join(__dirname, "build/js"),
+    filename: 'bundle.js',
   },
   module: {
-    loaders: []
+    loaders: [
+      {
+        test: /.jsx?$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+        query: {
+          presets: ['es2015', 'react']
+        }
+      }
+    ]
+  },
+  resolve: {
+    extensions: ['', '.js', '.json']
   }
 };

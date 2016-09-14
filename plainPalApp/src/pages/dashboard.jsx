@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom'; // needed to mount React components
+
 var DashboardApp = React.createClass({
   render: function() {
     var countryDataSource = {
@@ -149,7 +152,8 @@ var DashboardApp = React.createClass({
     );
   }
 });
-React.render(
-  <DashboardApp />,
+
+ReactDOM.render(
+  <DashboardApp/>,
   document.getElementById("dashboard")
 );
