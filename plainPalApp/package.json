@@ -4,7 +4,9 @@
   "description": "Webapp that allows you to find flights for your vacations with variable criteria",
   "main": "index.js",
   "scripts": {
-    "dev": "\"webpack\" \"node server.js\"",
+    "webpack": "webpack",
+    "server": "node server.js",
+    "dev": "npm run webpack && npm run server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
