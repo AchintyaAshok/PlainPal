@@ -10,6 +10,10 @@ import TripDetailsCard from './pages/TripDetailsCard.jsx';
 // import Hello from './pages/hello.jsx';
 // import DashboardApp from './pages/dashboard.jsx';
 //
+(function(){
+  $(".button-collapse").sideNav();
+});
+
 class App extends React.Component{
   render() {
     return (
