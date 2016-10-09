@@ -15,7 +15,7 @@ var TripSchema = new mongoose.Schema({
   }
 });
 
-var Trip = mongoose.model('Trip', UserSchema);
+var Trip = mongoose.model('Trip', TripSchema);
 
 module.exports = {
   schema: TripSchema,

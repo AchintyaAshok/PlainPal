@@ -20,7 +20,7 @@ var TripDetailsSchema = new Schema({
   }
 });
 
-var TripDetails = mongoose.model('TripDetails', UserSchema);
+var TripDetails = mongoose.model('TripDetails', TripDetailsSchema);
 
 module.exports = {
   schema: TripDetailsSchema,

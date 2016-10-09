@@ -7,6 +7,10 @@ var models              = require('./models/Models');
 var User = models.User.model;
 var Trip = models.Trip.model;
 
+// DELETE ANY STALE DATA
+User.collection.remove();
+Trip.collection.remove();
+
 // SEED Users & Trip
 var achintya = new User({
   _id:        "Trevize",
@@ -22,21 +26,36 @@ achintyaTrips.push(new Trip({
   sourceCityName:     "New York",
   destCityName:       "London",
   sourceAirportCode:  "JFK",
-  destAirportcode:    "LHR",
+  destAirportCode:    "LHR",
   startDate:          new Date("2017-01-15"),
   endDate:            new Date("2017-01-20")
 }));
+achintyaTrips.push(new Trip({
+  sourceCityName:     "New York",
+  destCityName:       "Miami",
+  sourceAirportCode:  "JFK",
+  destAirportCode:    "MIA",
+  startDate:          new Date("2017-04-20"),
+  endDate:            new Date("2017-01-24")
+}));
 
-
-achintya.save( (err) => {
-  if(err) throw(err);
-}).then( (user) => {
-  for(trip in achintyaTrips){ // save all the trips
-    trip.userId = user._id; // set it to achintya's id
-    trip.save( (err) => {
-      if(err) throw(err);
-    });
+achintya.save()
+.then( (user) => {
+  console.log(`Created: ${user}`);
+  for(var i=0; i<achintyaTrips.length; ++i){
+    var trip = achintyaTrips[i];
+    trip.userId = user._id;
   }
+  Trip.create(achintyaTrips, (err, data) => {
+    if(err) throw(err)
+    else{
+      console.log(`Created ${data.length} Trips.`);
+      process.exit(0);
+    }
+  })
+})
+.catch( (error) => {
+  console.log(`Unexpected error. Cannot create trips for user. Error: ${error}`);
 });
 
 // var jDoe = new User({
